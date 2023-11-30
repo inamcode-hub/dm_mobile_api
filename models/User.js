@@ -60,7 +60,7 @@ const userSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
-      required: [true, 'Please provide name'],
+      required: [true, 'Please provide first name'],
       maxlength: 20,
       minlength: 3,
       lowercase: true,
@@ -68,7 +68,9 @@ const userSchema = new mongoose.Schema(
     },
     lastName: {
       type: String,
+      required: [true, 'Please provide last name'],
       maxlength: 20,
+      minlength: 3,
       lowercase: true,
       trim: true,
     },
