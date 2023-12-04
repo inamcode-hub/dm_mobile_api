@@ -171,15 +171,21 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
 
 userSchema.methods.createPasswordResetToken = async function () {
   const alg = 'HS256';
-
-  return await new jose.SignJWT({ userId: this._id, name: this.firstName })
+  const resetToken = await new jose.SignJWT({
+    userId: this._id,
+    name: this.firstName,
+  })
     .setProtectedHeader({ alg })
     .setIssuedAt()
     .setIssuer(this.role)
     .setAudience(`urn:example:audience`)
     .setExpirationTime('1h')
     .sign(new TextEncoder().encode(process.env.JWT_SECRET));
+  this.recoveryToken = resetToken;
+  await this.save({ validateBeforeSave: false });
+  return resetToken;
 };
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
