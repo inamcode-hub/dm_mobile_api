@@ -99,6 +99,8 @@ const forgotPassword = async (req, res, next) => {
       .json({ success: false, message: 'User not found with this email' });
   }
   const token = await user.createPasswordResetToken();
+  await User.findOneAndUpdate({ email }, { recoveryToken: token });
+
   const link = `${process.env.HOST_URL}/forgot-password-update?email=${email}&token=${token}`;
 
   const msg = {
@@ -161,9 +163,11 @@ const updateForgotPassword = async (req, res, next) => {
     );
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    user.password = hashedPassword;
-    user.recoveryToken = undefined;
-    await user.save({ validateBeforeSave: false });
+
+    await User.findOneAndUpdate(
+      { email },
+      { password: hashedPassword, recoveryToken: '' }
+    );
 
     res
       .status(StatusCodes.OK)

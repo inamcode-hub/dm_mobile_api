@@ -181,8 +181,6 @@ userSchema.methods.createPasswordResetToken = async function () {
     .setAudience(`urn:example:audience`)
     .setExpirationTime('1m')
     .sign(new TextEncoder().encode(process.env.JWT_SECRET));
-  this.recoveryToken = resetToken;
-  await this.save({ validateBeforeSave: false });
   return resetToken;
 };
 
