@@ -5,6 +5,7 @@ const User = require('../models/User');
 var bcrypt = require('bcryptjs');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const jose = require('jose');
 
 // ==========>>>>>> Create operation - create a user
 const createUser = async (req, res, next) => {
@@ -123,10 +124,64 @@ const forgotPassword = async (req, res, next) => {
   }
 };
 
+// ==========>>>>>> Update Forgot Password operation - update password
+
+const updateForgotPassword = async (req, res, next) => {
+  const { email, token, password } = req.body;
+
+  //  check if email and password is provided
+
+  if (!email || !token || !password)
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      success: false,
+      message: 'Please provide email, token and password',
+    });
+
+  // check if email is valid
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ success: false, message: 'User not found with this email' });
+  }
+
+  // check if token is valid
+
+  if (token !== user.recoveryToken) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ success: false, message: 'Invalid token' });
+  }
+
+  try {
+    await jose.jwtVerify(
+      token,
+      new TextEncoder().encode(process.env.JWT_SECRET)
+    );
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    user.password = hashedPassword;
+    user.recoveryToken = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    res
+      .status(StatusCodes.OK)
+      .json({ success: true, message: 'Password updated successfully' });
+  } catch (error) {
+    return res.status(StatusCodes.UNAUTHORIZED).json({
+      success: false,
+      message: 'Token is invalid or has expired',
+      result: error?.code,
+    });
+  }
+};
+
 // ==========>>>>>> Export module
 
 module.exports = {
   createUser,
   LoginUser,
   forgotPassword,
+  updateForgotPassword,
 };

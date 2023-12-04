@@ -7,6 +7,7 @@ const {
   createUser,
   LoginUser,
   forgotPassword,
+  updateForgotPassword,
 } = require('../controllers/userController');
 const { authenticateUser } = require('../middleware/auth/userAuth');
 // const { authenticateAdmin } = require('../middleware/auth/adminAuth');
@@ -19,5 +20,8 @@ router.post('/login', LoginUser); // public route
 
 // ==========>>>>>> Forgot Password
 router.post('/forgot_password', forgotPassword); // public route
+
+// ==========>>>>>> Forgot Password - Reset Password
+router.put('/forgot_password_update', updateForgotPassword); // public route
 
 module.exports = router;
