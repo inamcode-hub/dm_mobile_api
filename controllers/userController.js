@@ -168,10 +168,15 @@ const updateForgotPassword = async (req, res, next) => {
       { email },
       { password: hashedPassword, recoveryToken: '' }
     );
-
-    res
-      .status(StatusCodes.OK)
-      .json({ success: true, message: 'Password updated successfully' });
+    const userToken = await user.createJWT();
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: 'Password updated successfully',
+      token: userToken,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      role: user.role,
+    });
   } catch (error) {
     return res.status(StatusCodes.UNAUTHORIZED).json({
       success: false,
