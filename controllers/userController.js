@@ -3,6 +3,8 @@
 const { StatusCodes } = require('http-status-codes');
 const User = require('../models/User');
 var bcrypt = require('bcryptjs');
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // ==========>>>>>> Create operation - create a user
 const createUser = async (req, res, next) => {
@@ -78,9 +80,36 @@ const LoginUser = async (req, res, next) => {
     .json({ success: true, role, firstName, lastName, token });
 };
 
+// ==========>>>>>> Forgot Password operation - forgot password
+
+const forgotPassword = async (req, res, next) => {
+  const msg = {
+    to: 'inam@dryermaster.com', // The recipient's email address
+    from: process.env.SENDGRID_EMAIL_SENDER, // Your verified sender email address
+    subject: 'Reset Your Password',
+    text: 'Hi there,\n\nWe received a request to reset your password for your account. If you did not request a password reset, please ignore this email.\n\nTo reset your password, please click the link below:\n[Reset Password Link]\n\nBest,\nThe YourDomain Team',
+    html: '<p>Hi there,</p><p>We received a request to reset your password for your account. If you did not request a password reset, please ignore this email.</p><p>To reset your password, please click the link below:<br><a href="[Reset Password Link]">Reset Password</a></p><p>Best,<br>The YourDomain Team</p>',
+  };
+
+  try {
+    await sgMail.send(msg);
+    console.log('Email sent');
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: 'Password reset email sent successfully',
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ success: false, message: 'Failed to send password reset email' });
+  }
+};
+
 // ==========>>>>>> Export module
 
 module.exports = {
   createUser,
   LoginUser,
+  forgotPassword,
 };
