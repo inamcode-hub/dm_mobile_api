@@ -28,6 +28,7 @@ const createUser = async (req, res, next) => {
       firstName: user.firstName,
       lastName: user.lastName,
       token,
+      email: user.email,
     });
   } catch (err) {
     next(err);
@@ -66,10 +67,10 @@ const LoginUser = async (req, res, next) => {
     }
     //  create token and send to client
     const token = await user.createJWT();
-    const { role, firstName, lastName } = user;
+    const { role, firstName, lastName, email } = user;
     res
       .status(StatusCodes.OK)
-      .json({ success: true, role, firstName, lastName, token });
+      .json({ success: true, role, firstName, lastName, token, email });
   } catch (err) {
     next(err);
   }
@@ -174,6 +175,7 @@ const updateForgotPassword = async (req, res, next) => {
       firstName: user.firstName,
       lastName: user.lastName,
       role: user.role,
+      email: user.email,
     });
   } catch (error) {
     next(error);
