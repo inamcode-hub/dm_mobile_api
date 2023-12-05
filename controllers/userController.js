@@ -150,12 +150,18 @@ const updateForgotPassword = async (req, res, next) => {
         .json({ success: false, message: 'Invalid token' });
     }
 
-    // check if token is valid
-    await jose.jwtVerify(
-      token,
-      new TextEncoder().encode(process.env.JWT_SECRET)
-    );
-
+    try {
+      await jose.jwtVerify(
+        token,
+        new TextEncoder().encode(process.env.JWT_SECRET)
+      );
+    } catch (error) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: 'Token has expired',
+        result: error,
+      });
+    }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -170,11 +176,7 @@ const updateForgotPassword = async (req, res, next) => {
       role: user.role,
     });
   } catch (error) {
-    return res.status(StatusCodes.UNAUTHORIZED).json({
-      success: false,
-      message: 'Token is invalid or has expired',
-      result: error,
-    });
+    next(error);
   }
 };
 
