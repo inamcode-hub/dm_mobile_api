@@ -34,6 +34,7 @@ const createUser = async (req, res, next) => {
       token,
       email: user.email,
       dmSerial: user.dmSerial,
+      subscriptionExpiry: user.subscriptionExpiry,
     });
   } catch (err) {
     next(err);
@@ -72,18 +73,17 @@ const LoginUser = async (req, res, next) => {
     }
     //  create token and send to client
     const token = await user.createJWT();
-    const { role, firstName, lastName, dmSerial } = user;
-    res
-      .status(StatusCodes.OK)
-      .json({
-        success: true,
-        role,
-        firstName,
-        lastName,
-        token,
-        email,
-        dmSerial,
-      });
+    const { role, firstName, lastName, dmSerial, subscriptionExpiry } = user;
+    res.status(StatusCodes.OK).json({
+      success: true,
+      role,
+      firstName,
+      lastName,
+      token,
+      email,
+      dmSerial,
+      subscriptionExpiry,
+    });
   } catch (err) {
     console.log(err);
     next(err);
