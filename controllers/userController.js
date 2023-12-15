@@ -10,7 +10,7 @@ const jose = require('jose');
 // ==========>>>>>> Create operation - create a user
 const createUser = async (req, res, next) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password, dmSerial } = req.body;
     const isFirstAccount = await User.countDocuments({});
     const role = isFirstAccount === 0 ? 'admin' : 'user';
     const user = await User.create({
@@ -19,6 +19,10 @@ const createUser = async (req, res, next) => {
       email,
       password,
       role,
+      dmSerial,
+      subscriptionExpiry: new Date(
+        new Date().setFullYear(new Date().getFullYear() + 1)
+      ),
     });
     const token = await user.createJWT();
     res.status(StatusCodes.CREATED).json({
@@ -29,6 +33,7 @@ const createUser = async (req, res, next) => {
       lastName: user.lastName,
       token,
       email: user.email,
+      dmSerial: user.dmSerial,
     });
   } catch (err) {
     next(err);

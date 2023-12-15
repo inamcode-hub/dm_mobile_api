@@ -118,8 +118,16 @@ const userSchema = new mongoose.Schema(
       type: Date,
       trim: true,
     },
+    dmSerial: {
+      type: String,
+      maxlength: 50,
+      trim: true,
+    },
     active: { type: Boolean, default: true },
-    subscription: { type: Boolean, default: false },
+    subscriptionExpiry: {
+      type: Date,
+      trim: true,
+    },
     verified: {
       type: Boolean,
       default: false,
