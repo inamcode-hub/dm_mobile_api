@@ -8,6 +8,7 @@ const {
   LoginUser,
   forgotPassword,
   updateForgotPassword,
+  isUserExpired,
 } = require('../controllers/userController');
 const { authenticateUser } = require('../middleware/auth/userAuth');
 // const { authenticateAdmin } = require('../middleware/auth/adminAuth');
@@ -24,4 +25,6 @@ router.post('/forgot_password', forgotPassword); // public route
 // ==========>>>>>> Forgot Password - Reset Password
 router.put('/forgot_password_update', updateForgotPassword); // public route
 
+// ==========>>>>>> Is User Expired - Check if user is expired
+router.get('/subscription_status', authenticateUser, isUserExpired); // private route - user
 module.exports = router;
