@@ -3,18 +3,18 @@
 const express = require('express');
 const router = express.Router();
 
-const {
-  createUser,
-  LoginUser,
-  forgotPassword,
-  updateForgotPassword,
-  isUserExpired,
-} = require('../controllers/userController');
 const { authenticateUser } = require('../middleware/auth/userAuth');
+const { registerUser } = require('../controllers/user/registerUser');
+const { LoginUser } = require('../controllers/user/loginUser');
+const { forgotPassword } = require('../controllers/user/forgotPassword');
+const {
+  forgotPasswordUpdate,
+} = require('../controllers/user/forgotPasswordUpdate');
+const { subscriptionCheck } = require('../controllers/user/subscriptionCheck');
 // const { authenticateAdmin } = require('../middleware/auth/adminAuth');
 
 // ==========>>>>>> Create a user
-router.post('/register', createUser); // public route
+router.post('/register', registerUser); // public route
 
 // ==========>>>>>> Login a user
 router.post('/login', LoginUser); // public route
@@ -23,8 +23,9 @@ router.post('/login', LoginUser); // public route
 router.post('/forgot_password', forgotPassword); // public route
 
 // ==========>>>>>> Forgot Password - Reset Password
-router.put('/forgot_password_update', updateForgotPassword); // public route
+router.put('/forgot_password_update', forgotPasswordUpdate); // public route
 
-// ==========>>>>>> Is User Expired - Check if user is expired
-router.get('/subscription_status', authenticateUser, isUserExpired); // private route - user
+// ==========>>>>>> subscriptionCheck - with token in header - private route - user - check if user subscription is expired
+
+router.get('/subscription_status', authenticateUser, subscriptionCheck); // private route - user
 module.exports = router;
