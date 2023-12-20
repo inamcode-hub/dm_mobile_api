@@ -55,6 +55,8 @@ const forgotPasswordUpdate = async (req, res, next) => {
       lastName: user.lastName,
       role: user.role,
       email: user.email,
+      dmSerial: user.dmSerial,
+      subscriptionExpiry: user.subscriptionExpiry,
     });
   } catch (error) {
     next(error);
