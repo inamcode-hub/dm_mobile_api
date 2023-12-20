@@ -45,7 +45,10 @@ const forgotPasswordUpdate = async (req, res, next) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    await User.findOneAndUpdate({ email }, { password: hashedPassword });
+    await User.findOneAndUpdate(
+      { email },
+      { password: hashedPassword, recoveryToken: '' }
+    );
     const userToken = await user.createJWT();
     res.status(StatusCodes.OK).json({
       success: true,
