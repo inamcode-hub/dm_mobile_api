@@ -74,6 +74,14 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
+    farmName: {
+      type: String,
+      required: [true, 'Please provide farm name'],
+      maxlength: 50,
+      minlength: 3,
+      lowercase: true,
+      trim: true,
+    },
     cellPhone: {
       type: String,
       maxlength: 20,

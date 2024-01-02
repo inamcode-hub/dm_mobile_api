@@ -18,12 +18,14 @@ const nextBillingDate = () => {
 const registerUser = async (req, res, next) => {
   try {
     const subscriptionExpiry = nextBillingDate();
-    const { firstName, lastName, email, password, dmSerial } = req.body;
+    const { firstName, lastName, farmName, email, password, dmSerial } =
+      req.body;
     const isFirstAccount = await User.countDocuments({});
     const role = isFirstAccount === 0 ? 'admin' : 'user';
     const user = await User.create({
       firstName,
       lastName,
+      farmName,
       email,
       password,
       role,
