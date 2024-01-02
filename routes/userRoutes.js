@@ -13,6 +13,7 @@ const {
 const { subscriptionCheck } = require('../controllers/user/subscriptionCheck');
 const { changePassword } = require('../controllers/user/changePassword');
 const { profileRead } = require('../controllers/user/profileRead');
+const { profileUpdate } = require('../controllers/user/profileUpdate');
 // const { authenticateAdmin } = require('../middleware/auth/adminAuth');
 
 // ==========>>>>>> Create a user
@@ -26,6 +27,7 @@ router.post('/login', LoginUser); // public route
 router.put('/change_password', authenticateUser, changePassword); // private route - user
 
 router.get('/profile', authenticateUser, profileRead); // private route - user
+router.put('/profile', authenticateUser, profileUpdate); // private route - user
 
 // ==========>>>>>> Forgot Password
 router.post('/forgot_password', forgotPassword); // public route

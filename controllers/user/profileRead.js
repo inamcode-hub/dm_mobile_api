@@ -20,7 +20,7 @@ const profileRead = async (req, res, next) => {
     res.status(StatusCodes.OK).json({
       success: true,
       message: 'User profile',
-      user,
+      data: user,
     });
   } catch (err) {
     next(err);
