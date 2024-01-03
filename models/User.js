@@ -4,13 +4,19 @@ const jose = require('jose');
 
 const addressSchema = new mongoose.Schema(
   {
+    formattedAddress: {
+      type: String,
+      maxlength: 100,
+      lowercase: true,
+      trim: true,
+    },
     apartment: {
       type: String,
       maxlength: 50,
       lowercase: true,
       trim: true,
     },
-    house: {
+    building: {
       type: String,
       maxlength: 50,
       lowercase: true,
@@ -28,13 +34,7 @@ const addressSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    region: {
-      type: String,
-      maxlength: 100,
-      lowercase: true,
-      trim: true,
-    },
-    province: {
+    state: {
       type: String,
       maxlength: 50,
       lowercase: true,
@@ -46,9 +46,9 @@ const addressSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    postalCode: {
+    zipCode: {
       type: String,
-      maxlength: 50,
+      maxlength: 20,
       lowercase: true,
       trim: true,
     },
