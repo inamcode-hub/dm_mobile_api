@@ -1,13 +1,29 @@
 const { StatusCodes } = require('http-status-codes');
 const User = require('../../models/User');
-var bcrypt = require('bcryptjs');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-const jose = require('jose');
 
-// ==========>>>>>> 1. Profile Read
 const profileUpdate = async (req, res, next) => {
-  const { firstName, lastName, farmName, cellPhone, email } = req.body;
+  const {
+    firstName,
+    lastName,
+    farmName,
+    cellPhone,
+    email,
+    // Address fields
+    formattedAddress,
+    apartment,
+    building,
+    street,
+    city,
+    state,
+    country,
+    zipCode,
+    // Geolocation fields
+    longitude,
+    latitude,
+  } = req.body;
+
   try {
     const user = await User.findById(req.user.userId);
     if (!user) {
@@ -17,6 +33,21 @@ const profileUpdate = async (req, res, next) => {
       });
     }
 
+    const addressUpdate = {
+      'address.formattedAddress': formattedAddress,
+      'address.apartment': apartment,
+      'address.building': building,
+      'address.street': street,
+      'address.city': city,
+      'address.state': state,
+      'address.country': country,
+      'address.zipCode': zipCode,
+      'address.location': {
+        type: 'Point',
+        coordinates: [longitude, latitude], // Ensure longitude comes first
+      },
+    };
+
     const updateUser = await User.findByIdAndUpdate(
       req.user.userId,
       {
@@ -25,12 +56,14 @@ const profileUpdate = async (req, res, next) => {
         farmName: farmName,
         cellPhone: cellPhone,
         email: email,
+        ...addressUpdate, // Spread the address fields here
       },
       {
         new: true,
         runValidators: true,
       }
     ).select('-password -recoveryToken -role -dmSerial');
+
     res.status(StatusCodes.OK).json({
       success: true,
       message: 'User profile updated',

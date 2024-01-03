@@ -7,19 +7,16 @@ const addressSchema = new mongoose.Schema(
     formattedAddress: {
       type: String,
       maxlength: 100,
-      lowercase: true,
       trim: true,
     },
     apartment: {
       type: String,
       maxlength: 50,
-      lowercase: true,
       trim: true,
     },
     building: {
       type: String,
       maxlength: 50,
-      lowercase: true,
       trim: true,
     },
     street: {
@@ -51,6 +48,17 @@ const addressSchema = new mongoose.Schema(
       maxlength: 20,
       lowercase: true,
       trim: true,
+    },
+    location: {
+      type: {
+        type: String,
+        enum: ['Point'],
+        default: 'Point',
+      },
+      coordinates: {
+        type: [{ type: Number }],
+        required: true,
+      },
     },
   },
   { _id: false }
@@ -140,17 +148,7 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    location: {
-      type: {
-        type: String,
-        enum: ['Point'],
-        default: 'Point',
-      },
-      coordinates: {
-        type: [{ type: Number }],
-        required: true,
-      },
-    },
+
     address: addressSchema, // Group address-related properties inside the "address" object
     recoveryToken: {
       type: String,
