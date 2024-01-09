@@ -5,7 +5,7 @@ const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const jose = require('jose');
 
-const AddUser = async (req, res, next) => {
+const AddOperator = async (req, res, next) => {
   try {
     const { firstName, lastName, email, password } = req.body;
     const { userId, name, role } = req.user;
@@ -25,6 +25,15 @@ const AddUser = async (req, res, next) => {
       });
     }
     const { farmName, dmSerial, subscriptionExpiry } = user;
+
+    // check if 5 users are already added
+    const users = await User.find({ dmSerial: dmSerial });
+    if (users.length >= 5) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: 'Only 5 users are allowed',
+      });
+    }
     const newUser = await User.create({
       firstName,
       lastName,
@@ -38,7 +47,7 @@ const AddUser = async (req, res, next) => {
     res.status(StatusCodes.OK).json({
       success: true,
       message: 'User created successfully!',
-      user: newUser,
+      data: newUser,
     });
   } catch (error) {
     next(error);
@@ -46,5 +55,5 @@ const AddUser = async (req, res, next) => {
 };
 
 module.exports = {
-  AddUser,
+  AddOperator,
 };

@@ -14,7 +14,11 @@ const { subscriptionCheck } = require('../controllers/user/subscriptionCheck');
 const { changePassword } = require('../controllers/user/changePassword');
 const { profileRead } = require('../controllers/user/profileRead');
 const { profileUpdate } = require('../controllers/user/profileUpdate');
-const { AddUser } = require('../controllers/user/addUser');
+const { AddOperator } = require('../controllers/user/addOperator');
+const { AllOperators } = require('../controllers/user/allOperators');
+const { EditOperator } = require('../controllers/user/editOperator');
+const { DeleteOperator } = require('../controllers/user/deleteOperator');
+
 // const { authenticateAdmin } = require('../middleware/auth/adminAuth');
 
 // ==========>>>>>> Create a user
@@ -40,7 +44,16 @@ router.put('/forgot_password_update', forgotPasswordUpdate); // public route
 
 router.get('/subscription_status', authenticateUser, subscriptionCheck); // private route - user
 
-// ==========>>>>>> Add a user
-router.post('/add_user', authenticateUser, AddUser); // private route - user
+// ==========>>>>>> Add a Operator
+router.post('/add_operator', authenticateUser, AddOperator); // private route - user
+
+// ==========>>>>>> Get all Operators
+router.get('/all_operators', authenticateUser, AllOperators); // private route - user
+
+// ==========>>>>>> editOperator - with token in header - private route - user - edit operator
+router.put('/edit_operator', authenticateUser, EditOperator); // private route - user
+
+// ==========>>>>>> deleteOperator - with token in header - private route - user - delete operator
+router.delete('/delete_operator', authenticateUser, DeleteOperator); // private route - user
 
 module.exports = router;
