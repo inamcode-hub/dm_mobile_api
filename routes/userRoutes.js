@@ -14,6 +14,7 @@ const { subscriptionCheck } = require('../controllers/user/subscriptionCheck');
 const { changePassword } = require('../controllers/user/changePassword');
 const { profileRead } = require('../controllers/user/profileRead');
 const { profileUpdate } = require('../controllers/user/profileUpdate');
+const { AddUser } = require('../controllers/user/addUser');
 // const { authenticateAdmin } = require('../middleware/auth/adminAuth');
 
 // ==========>>>>>> Create a user
@@ -38,5 +39,8 @@ router.put('/forgot_password_update', forgotPasswordUpdate); // public route
 // ==========>>>>>> subscriptionCheck - with token in header - private route - user - check if user subscription is expired
 
 router.get('/subscription_status', authenticateUser, subscriptionCheck); // private route - user
+
+// ==========>>>>>> Add a user
+router.post('/add_user', authenticateUser, AddUser); // private route - user
 
 module.exports = router;
