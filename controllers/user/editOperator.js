@@ -7,7 +7,7 @@ const jose = require('jose');
 
 const EditOperator = async (req, res, next) => {
   try {
-    const { firstName, lastName, email, operatorId } = req.body;
+    const { firstName, lastName, email, operatorId, password } = req.body;
     const { userId, name, role } = req.user;
     // check if user is main user
     if (role !== 'user') {
@@ -39,16 +39,32 @@ const EditOperator = async (req, res, next) => {
         message: 'Operator not found',
       });
     }
-    // update operator and don't send password
-    const updatedOperator = await User.findByIdAndUpdate(
-      operatorId,
-      {
-        firstName,
-        lastName,
-        email,
-      },
-      { new: true }
-    );
+    let updatedOperator;
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+      updatedOperator = await User.findByIdAndUpdate(
+        operatorId,
+        {
+          firstName,
+          lastName,
+          email,
+          password: hashedPassword,
+        },
+        { new: true }
+      );
+    } else {
+      updatedOperator = await User.findByIdAndUpdate(
+        operatorId,
+        {
+          firstName,
+          lastName,
+          email,
+        },
+        { new: true }
+      );
+    }
+
     if (updatedOperator) {
       updatedOperator.password = undefined;
       // any other fields you want to exclude

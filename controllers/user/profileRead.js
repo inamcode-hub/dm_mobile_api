@@ -12,7 +12,7 @@ const profileRead = async (req, res, next) => {
       '-password -recoveryToken'
     );
     if (!user) {
-      return res.status(StatusCodes.NOT_FOUND).json({
+      return res.status(StatusCodes.UNAUTHORIZED).json({
         success: false,
         message: 'User not found',
       });
