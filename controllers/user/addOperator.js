@@ -27,8 +27,9 @@ const AddOperator = async (req, res, next) => {
     const { farmName, dmSerial, subscriptionExpiry } = user;
 
     // check if 5 users are already added
+    // also include main user
     const users = await User.find({ dmSerial: dmSerial });
-    if (users.length >= 5) {
+    if (users.length >= 6) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
         message: 'Only 5 users are allowed',
