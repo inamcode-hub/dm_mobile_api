@@ -54,6 +54,6 @@ router.get('/all_operators', authenticateUser, AllOperators); // private route -
 router.put('/edit_operator', authenticateUser, EditOperator); // private route - user
 
 // ==========>>>>>> deleteOperator - with token in header - private route - user - delete operator
-router.delete('/delete_operator', authenticateUser, DeleteOperator); // private route - user
+router.delete('/delete_operator/:id', authenticateUser, DeleteOperator); // private route - user
 
 module.exports = router;

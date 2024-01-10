@@ -6,8 +6,8 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const jose = require('jose');
 
 const DeleteOperator = async (req, res, next) => {
+  const operatorId = req.params.id;
   try {
-    const { operatorId } = req.body;
     const { userId, name, role } = req.user;
     // check if user is main user
     if (role !== 'user') {

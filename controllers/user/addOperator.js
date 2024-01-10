@@ -13,7 +13,7 @@ const AddOperator = async (req, res, next) => {
     if (role !== 'user') {
       return res.status(StatusCodes.UNAUTHORIZED).json({
         success: false,
-        message: 'Only main user can add user',
+        message: 'Only admin can add operator',
       });
     }
     // find user
@@ -32,7 +32,7 @@ const AddOperator = async (req, res, next) => {
     if (users.length >= 6) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
-        message: 'Only 5 users are allowed',
+        message: 'Only 5 operators are allowed',
       });
     }
     const newUser = await User.create({
@@ -47,7 +47,7 @@ const AddOperator = async (req, res, next) => {
     });
     res.status(StatusCodes.OK).json({
       success: true,
-      message: 'User created successfully!',
+      message: 'Operator created successfully!',
       data: newUser,
     });
   } catch (error) {

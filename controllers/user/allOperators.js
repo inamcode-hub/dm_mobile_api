@@ -39,6 +39,7 @@ const AllOperators = async (req, res, next) => {
       return res.status(StatusCodes.OK).json({
         success: false,
         message: 'No users found',
+        data: users,
       });
     }
     return res.status(StatusCodes.OK).json({
