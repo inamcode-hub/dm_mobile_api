@@ -14,18 +14,12 @@ const AllOperators = async (req, res, next) => {
         message: 'Only main user can get users',
       });
     }
-    // find user
     const user = await User.findById(userId);
-    if (!user) {
-      return res.status(StatusCodes.NOT_FOUND).json({
-        success: false,
-        message: 'User not found',
-      });
-    }
+
     const { dmSerial } = user;
-    // find all users
+    // find all users with dmSerial and role operator and status active true
     const users = await User.find(
-      { dmSerial: dmSerial, role: 'operator' },
+      { dmSerial: dmSerial, role: 'operator', active: true },
       {
         password: 0,
         subscriptionExpiry: 0,

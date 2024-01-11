@@ -16,25 +16,19 @@ const EditOperator = async (req, res, next) => {
         message: 'Only main user can edit Operator',
       });
     }
-    // find user
+
     const user = await User.findById(userId);
-    if (!user) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
-        success: false,
-        message: 'User not found',
-      });
-    }
     const { farmName, dmSerial, subscriptionExpiry } = user;
     // find operator
     const operator = await User.findById(operatorId);
     if (!operator) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
+      return res.status(StatusCodes.NOT_FOUND).json({
         success: false,
         message: 'Operator not found',
       });
     }
     if (operator.dmSerial !== dmSerial) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
+      return res.status(StatusCodes.NOT_FOUND).json({
         success: false,
         message: 'Operator not found',
       });

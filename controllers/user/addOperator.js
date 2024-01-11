@@ -16,14 +16,8 @@ const AddOperator = async (req, res, next) => {
         message: 'Only admin can add operator',
       });
     }
-    // find user
     const user = await User.findById(userId);
-    if (!user) {
-      return res.status(StatusCodes.NOT_FOUND).json({
-        success: false,
-        message: 'User not found',
-      });
-    }
+
     const { farmName, dmSerial, subscriptionExpiry } = user;
 
     // check if 5 users are already added

@@ -18,17 +18,11 @@ const DeleteOperator = async (req, res, next) => {
     }
     // find user
     const user = await User.findById(userId);
-    if (!user) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
-        success: false,
-        message: 'User not found',
-      });
-    }
     const { farmName, dmSerial, subscriptionExpiry } = user;
     // find operator
     const operator = await User.findById(operatorId);
     if (!operator) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
+      return res.status(StatusCodes.NOT_FOUND).json({
         success: false,
         message: 'Operator not found',
       });
@@ -39,8 +33,12 @@ const DeleteOperator = async (req, res, next) => {
         message: 'Operator not found',
       });
     }
-    // delete operator
-    const deletedOperator = await User.findByIdAndDelete(operatorId);
+    // change active status of user only
+    const deletedOperator = await User.findByIdAndUpdate(
+      operatorId,
+      { active: false },
+      { new: true }
+    );
     res.status(StatusCodes.OK).json({
       success: true,
       message: 'Operator Deleted successfully!',

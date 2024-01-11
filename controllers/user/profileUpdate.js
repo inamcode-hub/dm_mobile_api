@@ -25,14 +25,6 @@ const profileUpdate = async (req, res, next) => {
   } = req.body;
 
   try {
-    const user = await User.findById(req.user.userId);
-    if (!user) {
-      return res.status(StatusCodes.NOT_FOUND).json({
-        success: false,
-        message: 'User not found',
-      });
-    }
-
     const addressUpdate = {
       'address.formattedAddress': formattedAddress,
       'address.apartment': apartment,
