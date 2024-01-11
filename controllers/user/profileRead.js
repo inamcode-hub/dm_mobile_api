@@ -11,12 +11,6 @@ const profileRead = async (req, res, next) => {
     const user = await User.findById(req.user.userId).select(
       '-password -recoveryToken'
     );
-    if (!user) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({
-        success: false,
-        message: 'User not found',
-      });
-    }
     res.status(StatusCodes.OK).json({
       success: true,
       message: 'User profile',

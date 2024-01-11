@@ -33,6 +33,11 @@ const LoginUser = async (req, res, next) => {
         .status(StatusCodes.UNAUTHORIZED)
         .json({ success: false, message: 'Invalid credentials' });
     }
+    if (user.active === false) {
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ success: false, message: 'You are not authorized!' });
+    }
     //  create token and send to client
     const token = await user.createJWT();
     const { role, firstName, lastName, dmSerial, subscriptionExpiry } = user;

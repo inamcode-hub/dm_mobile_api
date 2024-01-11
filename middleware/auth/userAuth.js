@@ -30,7 +30,18 @@ const authenticateUser = async (req, res, next) => {
       result: error?.code,
     });
   }
-
+  const _id = req.user.userId;
+  const user = await User.findOne({ _id });
+  if (!user) {
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ success: false, message: 'You are not authorized!' });
+  }
+  if (user.active === false) {
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ success: false, message: 'You are not authorized!' });
+  }
   next();
 };
 
