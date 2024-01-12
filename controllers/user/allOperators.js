@@ -19,7 +19,7 @@ const AllOperators = async (req, res, next) => {
     const { dmSerial } = user;
     // find all users with dmSerial and role operator and status active true
     const users = await User.find(
-      { dmSerial: dmSerial, role: 'operator', active: true },
+      { dmSerial: dmSerial, role: 'operator' },
       {
         password: 0,
         subscriptionExpiry: 0,
