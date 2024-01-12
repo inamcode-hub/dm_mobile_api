@@ -33,7 +33,7 @@ const ReactiveOperator = async (req, res, next) => {
     const updatedOperator = await User.findByIdAndUpdate(
       _id,
       {
-        status: 'active',
+        active: true,
       },
       {
         new: true,
