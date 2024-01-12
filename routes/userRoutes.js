@@ -18,6 +18,7 @@ const { AddOperator } = require('../controllers/user/addOperator');
 const { AllOperators } = require('../controllers/user/allOperators');
 const { EditOperator } = require('../controllers/user/editOperator');
 const { DeleteOperator } = require('../controllers/user/deleteOperator');
+const { ReactiveOperator } = require('../controllers/user/reactiveOperator');
 
 // const { authenticateAdmin } = require('../middleware/auth/adminAuth');
 
@@ -55,5 +56,8 @@ router.put('/edit_operator', authenticateUser, EditOperator); // private route -
 
 // ==========>>>>>> deleteOperator - with token in header - private route - user - delete operator
 router.delete('/delete_operator/:id', authenticateUser, DeleteOperator); // private route - user
+
+// ==========>>>>> reactive Operator - with token in header - private route - user - reactive operator
+router.put('/reactive_operator/:id', authenticateUser, ReactiveOperator); // private route - user
 
 module.exports = router;
