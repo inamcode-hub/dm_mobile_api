@@ -8,7 +8,7 @@ const jose = require('jose');
 const ReactiveOperator = async (req, res, next) => {
   const _id = req.params.id;
   try {
-    const { userId, name, role, dmSerial } = req.user;
+    const { userId, name, role, dmSerial, totalOperators } = req.user;
     // check if user is main user
     if (role !== 'user') {
       return res.status(StatusCodes.UNAUTHORIZED).json({
@@ -27,6 +27,15 @@ const ReactiveOperator = async (req, res, next) => {
       return res.status(StatusCodes.UNAUTHORIZED).json({
         success: false,
         message: 'you are not authorized!',
+      });
+    }
+    // check if 5 users are already added
+    // also include main user
+    const users = await User.find({ dmSerial: dmSerial, active: true });
+    if (users.length > totalOperators) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: `You can only add ${totalOperators} operators!`,
       });
     }
     // update operator status to active and don't send password in response

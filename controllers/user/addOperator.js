@@ -19,7 +19,7 @@ const AddOperator = async (req, res, next) => {
     }
     // check if 5 users are already added
     // also include main user
-    const users = await User.find({ dmSerial: dmSerial });
+    const users = await User.find({ dmSerial: dmSerial, active: true });
     if (users.length > totalOperators) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
