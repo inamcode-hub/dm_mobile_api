@@ -5,7 +5,7 @@ const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const jose = require('jose');
 
-const DeleteOperator = async (req, res, next) => {
+const DeactivateOperator = async (req, res, next) => {
   const operatorId = req.params.id;
   try {
     const { userId, name, role } = req.user;
@@ -37,11 +37,15 @@ const DeleteOperator = async (req, res, next) => {
     const deletedOperator = await User.findByIdAndUpdate(
       operatorId,
       { active: false },
-      { new: true }
+      {
+        new: true,
+        select:
+          '-password -subscriptionExpiry -address -createdAt -updatedAt -__v',
+      }
     );
     res.status(StatusCodes.OK).json({
       success: true,
-      message: 'Operator Deleted successfully!',
+      message: 'Operator Deactivate successfully!',
       data: deletedOperator,
     });
   } catch (error) {
@@ -50,5 +54,5 @@ const DeleteOperator = async (req, res, next) => {
 };
 
 module.exports = {
-  DeleteOperator,
+  DeactivateOperator,
 };
