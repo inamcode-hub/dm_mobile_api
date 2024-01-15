@@ -124,6 +124,10 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
+    totalOperators: {
+      type: Number,
+      default: 5,
+    },
     gender: {
       type: String,
       enum: ['male', 'female', 'other'],

@@ -43,6 +43,9 @@ const authenticateUser = async (req, res, next) => {
       .json({ success: false, message: 'You are not authorized!' });
   }
   req.user.dmSerial = user.dmSerial;
+  req.user.totalOperators = user.totalOperators;
+  req.user.farmName = user.farmName;
+  req.user.subscriptionExpiry = user.subscriptionExpiry;
   next();
 };
 

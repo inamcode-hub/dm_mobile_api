@@ -8,7 +8,8 @@ const jose = require('jose');
 const AddOperator = async (req, res, next) => {
   try {
     const { firstName, lastName, email, password } = req.body;
-    const { userId, name, role } = req.user;
+    const { role, totalOperators, dmSerial, farmName, subscriptionExpiry } =
+      req.user;
     // check if user is main user
     if (role !== 'user') {
       return res.status(StatusCodes.UNAUTHORIZED).json({
@@ -16,17 +17,13 @@ const AddOperator = async (req, res, next) => {
         message: 'Only admin can add operator',
       });
     }
-    const user = await User.findById(userId);
-
-    const { farmName, dmSerial, subscriptionExpiry } = user;
-
     // check if 5 users are already added
     // also include main user
     const users = await User.find({ dmSerial: dmSerial });
-    if (users.length >= 6) {
+    if (users.length > totalOperators) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
-        message: 'Only 5 operators are allowed',
+        message: `You can only add ${totalOperators} operators!`,
       });
     }
     const newUser = await User.create({
@@ -38,6 +35,7 @@ const AddOperator = async (req, res, next) => {
       role: 'operator',
       dmSerial,
       subscriptionExpiry,
+      totalOperators: 0,
     });
     res.status(StatusCodes.OK).json({
       success: true,

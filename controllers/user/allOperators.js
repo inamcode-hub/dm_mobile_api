@@ -7,16 +7,13 @@ const jose = require('jose');
 
 const AllOperators = async (req, res, next) => {
   try {
-    const { userId, name, role } = req.user;
+    const { userId, name, role, dmSerial } = req.user;
     if (role !== 'user') {
       return res.status(StatusCodes.UNAUTHORIZED).json({
         success: false,
-        message: 'Only main user can get users',
+        message: 'You are not authorized!',
       });
     }
-    const user = await User.findById(userId);
-
-    const { dmSerial } = user;
     // find all users with dmSerial and role operator and status active true
     const users = await User.find(
       { dmSerial: dmSerial, role: 'operator' },
