@@ -26,7 +26,7 @@ const ReactiveOperator = async (req, res, next) => {
     if (operator.dmSerial !== dmSerial) {
       return res.status(StatusCodes.UNAUTHORIZED).json({
         success: false,
-        message: 'You are not authorized to update this operator',
+        message: 'you are not authorized!',
       });
     }
     // update operator status to active and don't send password in response
