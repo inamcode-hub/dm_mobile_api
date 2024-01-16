@@ -17,9 +17,20 @@ const AddOperator = async (req, res, next) => {
         message: 'Only admin can add operator',
       });
     }
-    // check if 5 users are already added
-    // also include main user
+
     const users = await User.find({ dmSerial: dmSerial, active: true });
+    const totalUsers = await User.find({ dmSerial: dmSerial });
+
+    // maximum total Operators is totalOperators + 5
+    if (totalUsers.length >= totalOperators + 6) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: `You have reached maximum numbers of ${
+          totalOperators + 5
+        } operators!`,
+      });
+    }
+
     if (users.length > totalOperators) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
