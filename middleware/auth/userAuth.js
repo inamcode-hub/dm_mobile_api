@@ -46,6 +46,7 @@ const authenticateUser = async (req, res, next) => {
   req.user.totalOperators = user.totalOperators;
   req.user.farmName = user.farmName;
   req.user.subscriptionExpiry = user.subscriptionExpiry;
+  req.user.role = user.role;
   next();
 };
 
