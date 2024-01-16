@@ -35,7 +35,7 @@ const ReactiveOperator = async (req, res, next) => {
     if (users.length > totalOperators) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
-        message: `You can only add ${totalOperators} operators!`,
+        message: `You can only add ${totalOperators} active operators!`,
       });
     }
     // update operator status to active and don't send password in response
