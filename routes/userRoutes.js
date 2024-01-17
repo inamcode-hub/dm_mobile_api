@@ -21,9 +21,12 @@ const {
   DeactivateOperator,
 } = require('../controllers/user/deactivateOperator');
 const { ReactiveOperator } = require('../controllers/user/reactiveOperator');
+const { loginDryermaster } = require('../controllers/user/loginDryermaster');
 
 // const { authenticateAdmin } = require('../middleware/auth/adminAuth');
 
+// ==========>>>>>> check if dryermaster is registered
+router.post('/login_dryermaster', loginDryermaster); // public route
 // ==========>>>>>> Create a user
 router.post('/register', registerUser); // public route
 

@@ -1,6 +1,7 @@
 // dryermasters/dryermaster.js
 
 const mongoose = require('mongoose');
+const jose = require('jose');
 
 const dryermasterSchema = new mongoose.Schema(
   {

@@ -1,9 +1,8 @@
 const { StatusCodes } = require('http-status-codes');
 const User = require('../../models/User');
-var bcrypt = require('bcryptjs');
+const Dryermaster = require('../../models/Dryermaster');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-const jose = require('jose');
 
 const nextBillingDate = () => {
   const currentDate = new Date();
@@ -16,20 +15,43 @@ const nextBillingDate = () => {
 };
 // ==========>>>>>> Create operation - create a user
 const registerUser = async (req, res, next) => {
+  const { firstName, lastName, farmName, email, password, dryermasterId } =
+    req.body;
+  const subscriptionExpiry = nextBillingDate();
+
   try {
-    const subscriptionExpiry = nextBillingDate();
-    const { firstName, lastName, farmName, email, password, dmSerial } =
-      req.body;
-    const role = 'user';
+    const dryermaster = await Dryermaster.findById(dryermasterId);
+    if (!dryermaster) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: 'Dryermaster not found',
+      });
+    }
+
+    const existingUser = await User.findOne({ dryermasterId });
+    if (existingUser) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: 'User already registered with this Dryermaster',
+      });
+    }
+    const updatedDryermaster = await Dryermaster.findByIdAndUpdate(
+      dryermasterId,
+      {
+        $set: {
+          subscriptionExpiry,
+        },
+      },
+      { new: true }
+    );
+
     const user = await User.create({
       firstName,
       lastName,
       farmName,
       email,
       password,
-      role,
-      dmSerial,
-      subscriptionExpiry,
+      dryermasterId: dryermasterId,
     });
     const token = await user.createJWT();
 
@@ -41,8 +63,8 @@ const registerUser = async (req, res, next) => {
       lastName: user.lastName,
       token,
       email: user.email,
-      dmSerial: user.dmSerial,
-      subscriptionExpiry: user.subscriptionExpiry,
+      dmSerial: updatedDryermaster.dmSerial,
+      subscriptionExpiry: updatedDryermaster.subscriptionExpiry,
     });
   } catch (err) {
     next(err);

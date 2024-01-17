@@ -94,11 +94,6 @@ const userSchema = new mongoose.Schema(
       type: String,
       maxlength: 20,
     },
-    homePhone: {
-      type: String,
-      maxlength: 20,
-      trim: true,
-    },
     email: {
       type: String,
       required: [true, 'Please provide email'],
@@ -124,10 +119,6 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    totalOperators: {
-      type: Number,
-      default: 5,
-    },
     gender: {
       type: String,
       enum: ['male', 'female', 'other'],
@@ -138,16 +129,12 @@ const userSchema = new mongoose.Schema(
       type: Date,
       trim: true,
     },
-    dmSerial: {
-      type: String,
-      maxlength: 50,
-      trim: true,
+    dryermasterId: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Dryermaster',
+      required: [true, 'Please provide Dryermaster details'],
     },
     active: { type: Boolean, default: true },
-    subscriptionExpiry: {
-      type: Date,
-      trim: true,
-    },
     verified: {
       type: Boolean,
       default: false,
