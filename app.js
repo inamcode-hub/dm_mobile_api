@@ -8,6 +8,8 @@ const rateLimiter = require('express-rate-limit');
 const morgan = require('morgan');
 const sampleRoutes = require('./routes/sampleRoutes');
 const userRoutes = require('./routes/userRoutes');
+const employeeRoutes = require('./routes/employeeRoutes');
+const dryermasterRoutes = require('./routes/dryermasterRoutes');
 const {
   mongooseErrorHandler,
   notFoundErrorHandler,
@@ -41,6 +43,8 @@ app.get('/', (req, res) => {
 // =================== Multiple Action Api Routes ===================
 app.use('/api/v1/samples', sampleRoutes);
 app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/employees', employeeRoutes);
+app.use('/api/v1/dryermaster', dryermasterRoutes);
 
 //  =================== Single Action Routes ===================
 
