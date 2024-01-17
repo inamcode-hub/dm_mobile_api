@@ -35,6 +35,11 @@ const dryermasterSchema = new mongoose.Schema(
       ref: 'Employee',
       required: [true, 'Please enter employee'],
     },
+    soldBy: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Seller',
+      required: [true, 'Please enter seller'],
+    },
   },
   {
     timestamps: true,

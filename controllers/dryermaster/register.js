@@ -4,7 +4,7 @@ const Dryermaster = require('../../models/Dryermaster');
 // Create operation
 
 const register = async (req, res, next) => {
-  const { dmSerial, dmPassword } = req.body;
+  const { dmSerial, dmPassword, soldBy } = req.body;
   const { userId, name, iss } = req.user;
   if (!dmSerial || !dmPassword)
     return res.status(StatusCodes.BAD_REQUEST).json({
@@ -17,6 +17,7 @@ const register = async (req, res, next) => {
       dmSerial,
       dmPassword,
       createdBy: userId,
+      soldBy,
     });
     res.status(StatusCodes.CREATED).json({
       success: true,
