@@ -10,6 +10,7 @@ const sampleRoutes = require('./routes/sampleRoutes');
 const userRoutes = require('./routes/userRoutes');
 const employeeRoutes = require('./routes/employeeRoutes');
 const dryermasterRoutes = require('./routes/dryermasterRoutes');
+const sellerRoutes = require('./routes/sellerRoutes');
 const {
   mongooseErrorHandler,
   notFoundErrorHandler,
@@ -45,6 +46,7 @@ app.use('/api/v1/samples', sampleRoutes);
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/employees', employeeRoutes);
 app.use('/api/v1/dryermaster', dryermasterRoutes);
+app.use('/api/v1/seller', sellerRoutes);
 
 //  =================== Single Action Routes ===================
 
