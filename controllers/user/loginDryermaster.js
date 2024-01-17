@@ -29,8 +29,6 @@ const loginDryermaster = async (req, res, next) => {
     res.status(StatusCodes.OK).json({
       success: true,
       message: 'Dryermaster logged in successfully!',
-      dmSerial: dm.dmSerial,
-      token,
       dryermasterId: dm._id,
     });
   } catch (err) {
