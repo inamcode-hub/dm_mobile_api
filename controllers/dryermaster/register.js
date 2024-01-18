@@ -1,6 +1,6 @@
 const { StatusCodes } = require('http-status-codes');
 const Dryermaster = require('../../models/Dryermaster');
-
+const Seller = require('../../models/Seller');
 // Create operation
 
 const register = async (req, res, next) => {
@@ -10,6 +10,12 @@ const register = async (req, res, next) => {
     return res.status(StatusCodes.BAD_REQUEST).json({
       success: false,
       message: 'Please provide serial number and password',
+    });
+  const seller = await Seller.findById(soldBy);
+  if (!seller)
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      success: false,
+      message: 'Seller not found',
     });
 
   try {
