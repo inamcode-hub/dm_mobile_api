@@ -1,9 +1,7 @@
 const { StatusCodes } = require('http-status-codes');
 const User = require('../../models/User');
-var bcrypt = require('bcryptjs');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-const jose = require('jose');
 
 // ==========>>>>>> 1. Profile Read
 const profileRead = async (req, res, next) => {

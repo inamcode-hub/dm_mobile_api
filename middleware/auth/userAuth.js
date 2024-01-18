@@ -42,11 +42,11 @@ const authenticateUser = async (req, res, next) => {
       .status(StatusCodes.UNAUTHORIZED)
       .json({ success: false, message: 'You are not authorized!' });
   }
-  req.user.dmSerial = user.dmSerial;
-  req.user.totalOperators = user.totalOperators;
-  req.user.farmName = user.farmName;
-  req.user.subscriptionExpiry = user.subscriptionExpiry;
-  req.user.role = user.role;
+  if (user.role !== iss) {
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ success: false, message: 'You are not authorized!' });
+  }
   next();
 };
 

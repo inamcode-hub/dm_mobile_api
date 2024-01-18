@@ -46,7 +46,7 @@ const LoginUser = async (req, res, next) => {
     }
     //  create token and send to client
     const token = await user.createJWT();
-    const { role, firstName, lastName, dmSerial, subscriptionExpiry } = user;
+    const { role, firstName, lastName } = user;
     res.status(StatusCodes.OK).json({
       success: true,
       role,
