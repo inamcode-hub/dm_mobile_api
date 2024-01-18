@@ -1,5 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
-const User = require('../../models/User');
+const User = require('../../../models/User');
 var bcrypt = require('bcryptjs');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);

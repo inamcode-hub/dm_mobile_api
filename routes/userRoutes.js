@@ -14,13 +14,15 @@ const { subscriptionCheck } = require('../controllers/user/subscriptionCheck');
 const { changePassword } = require('../controllers/user/changePassword');
 const { profileRead } = require('../controllers/user/profileRead');
 const { profileUpdate } = require('../controllers/user/profileUpdate');
-const { AddOperator } = require('../controllers/user/addOperator');
-const { AllOperators } = require('../controllers/user/allOperators');
-const { EditOperator } = require('../controllers/user/editOperator');
+const { AddOperator } = require('../controllers/user/operator/addOperator');
+const { AllOperators } = require('../controllers/user/operator/allOperators');
+const { EditOperator } = require('../controllers/user/operator/editOperator');
 const {
   DeactivateOperator,
-} = require('../controllers/user/deactivateOperator');
-const { ReactiveOperator } = require('../controllers/user/reactiveOperator');
+} = require('../controllers/user/operator/deactivateOperator');
+const {
+  ReactiveOperator,
+} = require('../controllers/user/operator/reactiveOperator');
 const { loginDryermaster } = require('../controllers/user/loginDryermaster');
 
 // const { authenticateAdmin } = require('../middleware/auth/adminAuth');
