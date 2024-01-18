@@ -1,9 +1,8 @@
 const { StatusCodes } = require('http-status-codes');
 const User = require('../../models/User');
-var bcrypt = require('bcryptjs');
+const Dryermaster = require('../../models/Dryermaster');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-const jose = require('jose');
 
 const LoginUser = async (req, res, next) => {
   const { email, password } = req.body;
@@ -38,6 +37,13 @@ const LoginUser = async (req, res, next) => {
         .status(StatusCodes.UNAUTHORIZED)
         .json({ success: false, message: 'You are not authorized!' });
     }
+    const dryermaster = await Dryermaster.findById(user.dryermasterId);
+    if (!dryermaster) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: 'Dryermaster not found',
+      });
+    }
     //  create token and send to client
     const token = await user.createJWT();
     const { role, firstName, lastName, dmSerial, subscriptionExpiry } = user;
@@ -48,8 +54,8 @@ const LoginUser = async (req, res, next) => {
       lastName,
       token,
       email,
-      dmSerial,
-      subscriptionExpiry,
+      dmSerial: dryermaster.dmSerial,
+      subscriptionExpiry: dryermaster.subscriptionExpiry,
     });
   } catch (err) {
     console.log(err);
