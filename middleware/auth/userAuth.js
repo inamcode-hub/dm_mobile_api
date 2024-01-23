@@ -48,6 +48,7 @@ const authenticateUser = async (req, res, next) => {
       .status(StatusCodes.UNAUTHORIZED)
       .json({ success: false, message: 'You are not authorized!' });
   }
+  req.user.dryermasterId = user.dryermasterId;
   next();
 };
 
