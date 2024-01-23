@@ -1,13 +1,11 @@
 const { StatusCodes } = require('http-status-codes');
 const User = require('../../../models/User');
-var bcrypt = require('bcryptjs');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-const jose = require('jose');
 
 const AllOperators = async (req, res, next) => {
   try {
-    const { userId, name, role, dmSerial } = req.user;
+    const { userId, dryermasterId, role } = req.user;
     if (role !== 'user') {
       return res.status(StatusCodes.UNAUTHORIZED).json({
         success: false,
@@ -16,7 +14,7 @@ const AllOperators = async (req, res, next) => {
     }
     // find all users with dmSerial and role operator and status active true
     const users = await User.find(
-      { dmSerial: dmSerial, role: 'operator' },
+      { dryermasterId, role: 'operator' },
       {
         password: 0,
         subscriptionExpiry: 0,
