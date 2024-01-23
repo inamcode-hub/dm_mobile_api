@@ -67,7 +67,6 @@ const registerUser = async (req, res, next) => {
       dryermasterId: dryermasterId,
     });
     const token = await user.createJWT();
-    console.log(updatedDryermaster);
     res.status(StatusCodes.CREATED).json({
       success: true,
       message: 'User created successfully!',
