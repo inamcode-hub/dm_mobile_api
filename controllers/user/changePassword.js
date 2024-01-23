@@ -39,8 +39,9 @@ const changePassword = async (req, res, next) => {
         password: hashedPassword,
       },
       { new: true }
+    ).select(
+      '-password -__v -_id -dryermasterId -email -role -createdAt -updatedAt'
     );
-
     res.status(StatusCodes.OK).json({
       success: true,
       message: 'Password changed successfully',
