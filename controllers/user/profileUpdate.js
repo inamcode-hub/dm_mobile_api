@@ -54,7 +54,9 @@ const profileUpdate = async (req, res, next) => {
         new: true,
         runValidators: true,
       }
-    ).select('-password -recoveryToken -role -dmSerial');
+    ).select(
+      '-password -recoveryToken -__v -_id -dryermasterId -email -role -createdAt -updatedAt'
+    );
 
     res.status(StatusCodes.OK).json({
       success: true,
