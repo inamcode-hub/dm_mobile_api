@@ -4,6 +4,7 @@ var bcrypt = require('bcryptjs');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const jose = require('jose');
+const Dryermaster = require('../../models/Dryermaster');
 
 const forgotPasswordUpdate = async (req, res, next) => {
   const { email, token, password } = req.body;
@@ -44,7 +45,13 @@ const forgotPasswordUpdate = async (req, res, next) => {
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-
+    const dryermaster = await Dryermaster.findById(user.dryermasterId);
+    if (!dryermaster) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        success: false,
+        message: 'Dryermaster not found',
+      });
+    }
     await User.findOneAndUpdate(
       { email },
       { password: hashedPassword, recoveryToken: '' }
@@ -58,8 +65,9 @@ const forgotPasswordUpdate = async (req, res, next) => {
       lastName: user.lastName,
       role: user.role,
       email: user.email,
-      dmSerial: user.dmSerial,
-      subscriptionExpiry: user.subscriptionExpiry,
+      dmSerial: dryermaster.dmSerial,
+      dmModel: dryermaster.dmModel,
+      subscriptionExpiry: dryermaster.subscriptionExpiry,
     });
   } catch (error) {
     next(error);

@@ -55,6 +55,7 @@ const LoginUser = async (req, res, next) => {
       token,
       email,
       dmSerial: dryermaster.dmSerial,
+      dmModel: dryermaster.dmModel,
       subscriptionExpiry: dryermaster.subscriptionExpiry,
     });
   } catch (err) {
