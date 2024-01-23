@@ -1,15 +1,19 @@
 const { StatusCodes } = require('http-status-codes');
 const User = require('../../../models/User');
-var bcrypt = require('bcryptjs');
+const Dryermaster = require('../../../models/Dryermaster');
 const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-const jose = require('jose');
 
 const AddOperator = async (req, res, next) => {
+  const { firstName, lastName, email, password } = req.body;
+  if (!firstName || !lastName || !email || !password) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      success: false,
+      message: 'Please fill all required fields!',
+    });
+  }
   try {
-    const { firstName, lastName, email, password } = req.body;
-    const { role, totalOperators, dmSerial, farmName, subscriptionExpiry } =
-      req.user;
+    const { role, userId, dryermasterId } = req.user;
     // check if user is main user
     if (role !== 'user') {
       return res.status(StatusCodes.UNAUTHORIZED).json({
@@ -17,9 +21,16 @@ const AddOperator = async (req, res, next) => {
         message: 'Only admin can add operator',
       });
     }
-
-    const users = await User.find({ dmSerial: dmSerial, active: true });
-    const totalUsers = await User.find({ dmSerial: dmSerial });
+    const dryermaster = await Dryermaster.findOne({ _id: dryermasterId });
+    if (!dryermaster) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        success: false,
+        message: 'You are not authorized!',
+      });
+    }
+    const { totalOperators } = dryermaster;
+    const users = await User.find({ dryermasterId, active: true });
+    const totalUsers = await User.find({ dryermasterId });
 
     // maximum total Operators is totalOperators + 5
     if (totalUsers.length >= totalOperators + 6) {
@@ -40,14 +51,18 @@ const AddOperator = async (req, res, next) => {
     const newUser = await User.create({
       firstName,
       lastName,
-      farmName,
+      farmName: users[0]?.farmName,
       email,
       password,
       role: 'operator',
-      dmSerial,
-      subscriptionExpiry,
-      totalOperators: 0,
+      dryermasterId,
     });
+    newUser.password = undefined;
+    newUser.__v = undefined;
+    newUser.dryermasterId = undefined;
+    newUser.role = undefined;
+    newUser._id = undefined;
+
     res.status(StatusCodes.OK).json({
       success: true,
       message: 'Operator created successfully!',
