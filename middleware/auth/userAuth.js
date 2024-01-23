@@ -31,6 +31,7 @@ const authenticateUser = async (req, res, next) => {
     });
   }
   const _id = req.user.userId;
+  const iss = req.user.role;
   const user = await User.findOne({ _id });
   if (!user) {
     return res
