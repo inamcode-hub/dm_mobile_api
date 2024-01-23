@@ -18,6 +18,19 @@ const registerUser = async (req, res, next) => {
   const { firstName, lastName, farmName, email, password, dryermasterId } =
     req.body;
   const subscriptionExpiry = nextBillingDate();
+  if (
+    !firstName ||
+    !lastName ||
+    !farmName ||
+    !email ||
+    !password ||
+    !dryermasterId
+  ) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      success: false,
+      message: 'Please provide all required fields',
+    });
+  }
 
   try {
     const dryermaster = await Dryermaster.findById(dryermasterId);
@@ -61,8 +74,8 @@ const registerUser = async (req, res, next) => {
       role: user.role,
       firstName: user.firstName,
       lastName: user.lastName,
-      token,
       email: user.email,
+      token,
       dmSerial: updatedDryermaster.dmSerial,
       subscriptionExpiry: updatedDryermaster.subscriptionExpiry,
     });
