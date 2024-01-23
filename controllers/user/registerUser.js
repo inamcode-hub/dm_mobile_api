@@ -67,7 +67,7 @@ const registerUser = async (req, res, next) => {
       dryermasterId: dryermasterId,
     });
     const token = await user.createJWT();
-
+    console.log(updatedDryermaster);
     res.status(StatusCodes.CREATED).json({
       success: true,
       message: 'User created successfully!',
@@ -77,6 +77,7 @@ const registerUser = async (req, res, next) => {
       email: user.email,
       token,
       dmSerial: updatedDryermaster.dmSerial,
+      dmModel: updatedDryermaster.dmModel,
       subscriptionExpiry: updatedDryermaster.subscriptionExpiry,
     });
   } catch (err) {
