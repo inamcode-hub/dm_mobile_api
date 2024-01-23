@@ -18,6 +18,15 @@ const dryermasterSchema = new mongoose.Schema(
       trim: true,
       maxLength: [20, 'Dryermaster password cannot exceed 100 characters'],
     },
+    dmModel: {
+      type: String,
+      enum: {
+        values: ['dm510', 'dm520'],
+      },
+      default: 'dm520',
+      trim: true,
+      maxLength: [20, 'Dryermaster model cannot exceed 100 characters'],
+    },
     totalOperators: {
       type: Number,
       default: 5,

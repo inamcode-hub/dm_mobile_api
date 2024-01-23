@@ -4,7 +4,7 @@ const Seller = require('../../models/Seller');
 // Create operation
 
 const register = async (req, res, next) => {
-  const { dmSerial, dmPassword, soldBy } = req.body;
+  const { dmSerial, dmPassword, soldBy, dmModel } = req.body;
   const { userId, name, iss } = req.user;
   if (!dmSerial || !dmPassword)
     return res.status(StatusCodes.BAD_REQUEST).json({
@@ -22,6 +22,7 @@ const register = async (req, res, next) => {
     const dryermaster = await Dryermaster.create({
       dmSerial,
       dmPassword,
+      dmModel,
       createdBy: userId,
       soldBy,
     });
