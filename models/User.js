@@ -184,7 +184,7 @@ userSchema.methods.createPasswordResetToken = async function () {
     .setIssuedAt()
     .setIssuer(this.role)
     .setAudience(`urn:example:audience`)
-    .setExpirationTime('10m')
+    .setExpirationTime(process.env.JWT_PASSWORD_RESET_EXPIRES_IN)
     .sign(new TextEncoder().encode(process.env.JWT_SECRET));
   return resetToken;
 };
