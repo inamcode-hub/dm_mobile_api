@@ -8,7 +8,7 @@ const { createMessage } = require('../controllers/message/createMessage');
 const {
   authenticateEmployeeAdmin,
 } = require('../middleware/auth/employeeAdminAuth');
-const { userMessages } = require('../controllers/message/UserMessages');
+const { userMessages } = require('../controllers/message/userMessages');
 const { authenticateUser } = require('../middleware/auth/userAuth');
 
 // Create a message (admin only)
