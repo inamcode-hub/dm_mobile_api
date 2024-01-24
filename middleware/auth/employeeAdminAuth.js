@@ -19,7 +19,7 @@ const authenticateEmployeeAdmin = async (req, res, next) => {
   try {
     const { payload, protectedHeader } = await jose.jwtVerify(
       token,
-      new TextEncoder().encode(process.env.JWT_SECRET)
+      new TextEncoder().encode(process.env.JWT_SECRET_EMPLOYEE)
     );
     const { userId, name, iss } = payload;
 

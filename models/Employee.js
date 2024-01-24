@@ -90,7 +90,7 @@ employeeSchema.methods.createJWT = async function () {
     .setIssuer(this.role)
     .setAudience(`urn:example:audience`)
     .setExpirationTime(process.env.JWT_EXPIRES_IN)
-    .sign(new TextEncoder().encode(process.env.JWT_SECRET));
+    .sign(new TextEncoder().encode(process.env.JWT_SECRET_EMPLOYEE));
 };
 
 //  compare password with hashed password
@@ -112,7 +112,7 @@ employeeSchema.methods.createPasswordResetToken = async function () {
     .setIssuer(this.role)
     .setAudience(`urn:example:audience`)
     .setExpirationTime('10m')
-    .sign(new TextEncoder().encode(process.env.JWT_SECRET));
+    .sign(new TextEncoder().encode(process.env.JWT_SECRET_EMPLOYEE));
   return resetToken;
 };
 
