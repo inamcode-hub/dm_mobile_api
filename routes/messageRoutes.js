@@ -4,29 +4,17 @@ const express = require('express');
 const router = express.Router();
 
 const { createMessage } = require('../controllers/message/createMessage');
-const {
-  getAllMessages,
-  getMessageById,
-  updateMessageById,
-  deleteMessageById,
-} = require('../controllers/message/messageController');
+
 const {
   authenticateEmployeeAdmin,
 } = require('../middleware/auth/employeeAdminAuth');
+const { userMessages } = require('../controllers/message/UserMessages');
+const { authenticateUser } = require('../middleware/auth/userAuth');
 
-// Create a message
+// Create a message (admin only)
 router.post('/', authenticateEmployeeAdmin, createMessage);
 
-// Retrieve all messages
-router.get('/', getAllMessages);
-
-// Retrieve a message by ID
-router.get('/:id', getMessageById);
-
-// Update a message by ID
-router.put('/:id', updateMessageById);
-
-// Delete a message by ID
-router.delete('/:id', deleteMessageById);
+// Get all messages (user only)
+router.get('/user', authenticateUser, userMessages);
 
 module.exports = router;

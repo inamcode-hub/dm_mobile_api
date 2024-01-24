@@ -3,13 +3,21 @@ const Message = require('../../models/Message');
 
 // Create operation
 const createMessage = async (req, res, next) => {
+  const { title, content } = req.body;
+  const createdBy = req.user.userId;
+  if (!title || !content) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      success: false,
+      message: 'Please provide all required fields',
+    });
+  }
   try {
     const { name } = req.body;
-    const order = await Message.create({ name });
+    const message = await Message.create({ createdBy, title, content });
     res.status(StatusCodes.CREATED).json({
       success: true,
       message: 'Message created successfully',
-      result: order,
+      result: message,
     });
   } catch (err) {
     next(err);
