@@ -11,11 +11,10 @@ const userMessages = async (req, res, next) => {
     const totalMessages = await Message.countDocuments();
 
     const messages = await Message.find()
-      .select('-createdBy -_id')
+      .select('-createdBy -title -__v -updatedAt -readBy')
       .sort({ createdAt: -1 }) // Sort messages by createdAt in descending order (most recent first)
       .skip((page - 1) * messagesPerPage) // Skip the previous pages
       .limit(messagesPerPage); // Limit the number of messages per page
-
     const totalPages = Math.ceil(totalMessages / messagesPerPage);
 
     res.status(StatusCodes.OK).json({
