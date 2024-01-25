@@ -12,7 +12,6 @@ const createMessage = async (req, res, next) => {
     });
   }
   try {
-    const { name } = req.body;
     const message = await Message.create({ createdBy, title, content, type });
     res.status(StatusCodes.CREATED).json({
       success: true,
