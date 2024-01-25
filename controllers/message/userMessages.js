@@ -1,20 +1,29 @@
 const { StatusCodes } = require('http-status-codes');
 const Message = require('../../models/Message');
 
-// Create operation
 const userMessages = async (req, res, next) => {
   try {
-    const page = parseInt(req.query.page) || 1; // Get the page number from the query parameters
+    const page = parseInt(req.query.page) || 1;
     const messagesPerPage = parseInt(req.query.limit) || 10;
+    const userId = req.user.userId; // Get the user's ID
 
-    // Count total messages
     const totalMessages = await Message.countDocuments();
 
-    const messages = await Message.find()
-      .select('-createdBy -title -__v -updatedAt -readBy')
-      .sort({ createdAt: -1 }) // Sort messages by createdAt in descending order (most recent first)
-      .skip((page - 1) * messagesPerPage) // Skip the previous pages
-      .limit(messagesPerPage); // Limit the number of messages per page
+    let messages = await Message.find()
+      .select('-content -__v -updatedAt -createdBy')
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * messagesPerPage)
+      .limit(messagesPerPage);
+
+    // Add readMessage property to each message
+    messages = messages.map((message) => ({
+      ...message.toObject(), // Convert document to plain JavaScript object
+      readMessage: message.readBy.includes(userId),
+      readBy: undefined, // Remove readBy property from the response
+    }));
+
+    //readBy property removed from the response
+
     const totalPages = Math.ceil(totalMessages / messagesPerPage);
 
     res.status(StatusCodes.OK).json({
