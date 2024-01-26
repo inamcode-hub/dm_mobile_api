@@ -6,7 +6,7 @@ const userMessages = async (req, res, next) => {
     const page = parseInt(req.query.page) || 1;
     const messagesPerPage = parseInt(req.query.limit) || 10;
     const userId = req.user.userId; // Get the user's ID
-
+    console.log(req.user);
     const totalMessages = await Message.countDocuments();
 
     let messages = await Message.find()
