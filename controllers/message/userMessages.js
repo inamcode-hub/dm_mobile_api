@@ -6,15 +6,17 @@ const userMessages = async (req, res, next) => {
     const page = parseInt(req.query.page) || 1;
     const messagesPerPage = parseInt(req.query.limit) || 10;
     const userId = req.user.userId; // Get the user's ID
-    console.log(req.user);
-    const totalMessages = await Message.countDocuments();
+    const createdAt = req.user.createdAt; // Get the createdAt query parameter
 
-    let messages = await Message.find()
+    const totalMessages = await Message.countDocuments({
+      createdAt: { $gte: createdAt },
+    });
+
+    let messages = await Message.find({ createdAt: { $gte: createdAt } })
       .select('-content -__v -updatedAt -createdBy')
       .sort({ createdAt: -1 })
       .skip((page - 1) * messagesPerPage)
       .limit(messagesPerPage);
-
     // Add readMessage property to each message
     messages = messages.map((message) => ({
       ...message.toObject(), // Convert document to plain JavaScript object
