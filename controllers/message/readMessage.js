@@ -1,20 +1,26 @@
 const { StatusCodes } = require('http-status-codes');
 const Message = require('../../models/Message');
+const Employee = require('../../models/Employee');
 
 const readMessage = async (req, res, next) => {
   const { id } = req.params;
   const { userId } = req.user;
 
   try {
-    const message = await Message.findOne({ _id: id }).select(
-      '-__v -createdBy'
-    );
+    let message = await Message.findOne({ _id: id }).select('-__v');
     if (!message) {
       return res.status(StatusCodes.NOT_FOUND).json({
         success: false,
         message: 'Message not found',
       });
     }
+    const employee = await Employee.findOne({ _id: message.createdBy });
+
+    message = {
+      ...message.toObject(),
+      createdBy: undefined,
+      author: `${employee?.firstName} ${employee?.lastName}`,
+    };
 
     const alreadyRead = message.readBy.includes(userId);
 
