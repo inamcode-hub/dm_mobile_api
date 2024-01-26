@@ -1,5 +1,6 @@
 const { StatusCodes } = require('http-status-codes');
 const Message = require('../../models/Message');
+const Employee = require('../../models/Employee');
 
 const userMessages = async (req, res, next) => {
   try {
@@ -10,18 +11,30 @@ const userMessages = async (req, res, next) => {
     const totalMessages = await Message.countDocuments();
 
     let messages = await Message.find()
-      .select('-content -__v -updatedAt -createdBy')
+      .select('-content -__v -updatedAt')
       .sort({ createdAt: -1 })
       .skip((page - 1) * messagesPerPage)
       .limit(messagesPerPage);
 
-    // Add readMessage property to each message
-    messages = messages.map((message) => ({
-      ...message.toObject(), // Convert document to plain JavaScript object
-      readMessage: message.readBy.includes(userId),
-      readBy: undefined, // Remove readBy property from the response
-    }));
+    // Function to return the employee name
+    const getEmployeeName = async (employeeId) => {
+      const employee = await Employee.findById(employeeId);
+      return employee.firstName + ' ' + employee.lastName;
+    };
 
+    // Fetch and add sender name to each message
+    const result = await Promise.all(
+      messages.map(async (message) => {
+        const author = await getEmployeeName(message.createdBy);
+        return {
+          ...message.toObject(), // Convert document to plain JavaScript object
+          readMessage: message.readBy.includes(userId),
+          author, // Add resolved sender name
+          readBy: undefined, // Remove readBy property from the response
+          createdBy: undefined, // Remove createdBy property from the response
+        };
+      })
+    );
     //readBy property removed from the response
 
     const totalPages = Math.ceil(totalMessages / messagesPerPage);
@@ -32,7 +45,7 @@ const userMessages = async (req, res, next) => {
       totalMessages,
       totalPages,
       messagesPerPage,
-      result: messages,
+      result,
     });
   } catch (err) {
     next(err);
