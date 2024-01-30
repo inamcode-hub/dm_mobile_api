@@ -21,8 +21,8 @@ const readMessage = async (req, res, next) => {
       createdBy: undefined,
       author: `${employee?.firstName} ${employee?.lastName}`,
     };
-
-    const alreadyRead = message.readBy.includes(userId);
+    const readByUserIds = message.readBy.map((objectId) => objectId.toString());
+    const alreadyRead = readByUserIds.includes(userId);
 
     if (!alreadyRead) {
       await Message.updateOne({ _id: id }, { $push: { readBy: userId } });
