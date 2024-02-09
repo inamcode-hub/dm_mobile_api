@@ -134,6 +134,10 @@ const userSchema = new mongoose.Schema(
       ref: 'Dryermaster',
       required: [true, 'Please provide Dryermaster details'],
     },
+    stripeCustomerId: {
+      type: String,
+      trim: true,
+    },
     active: { type: Boolean, default: true },
     verified: {
       type: Boolean,
