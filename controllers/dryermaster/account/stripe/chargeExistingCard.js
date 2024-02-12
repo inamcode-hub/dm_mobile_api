@@ -21,7 +21,7 @@ const chargeExistingCard = async (req, res, next) => {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amount,
       currency: 'usd',
-      customer: customerId,
+      customer: user.stripeCustomerId,
       payment_method: paymentMethodId,
       off_session: true,
       confirm: true,
@@ -36,9 +36,19 @@ const chargeExistingCard = async (req, res, next) => {
       message: 'Charge successful',
       data: paymentIntent,
     });
-  } catch (error) {
-    console.error(error);
-    next(error);
+  } catch (err) {
+    console.error(err);
+    // Handle errors appropriately
+    if (err.type === 'StripeCardError') {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ success: false, message: err.message });
+    } else {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: 'An error occurred processing your payment. Please try again.',
+      });
+    }
   }
 };
 
