@@ -2,6 +2,7 @@
 const { StatusCodes } = require('http-status-codes');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const User = require('../../../../models/User');
+const Dryermaster = require('../../../../models/Dryermaster');
 
 // Helper function to retrieve existing payment methods for a customer
 const retrieveCustomerPaymentMethods = async (customerId) => {
@@ -20,9 +21,16 @@ const createPayment = async (req, res, next) => {
   try {
     // Retrieve user and check for existing Stripe customer ID
     let user = await User.findOne({ _id });
-
     let customerId = user.stripeCustomerId;
 
+    const dryermaster = await Dryermaster.findById(user.dryermasterId);
+    // check if dryerMaster is not expired
+    if (dryermaster.subscriptionExpiry > new Date()) {
+      return res.status(StatusCodes.OK).json({
+        success: false,
+        message: 'Your subscription is still active.',
+      });
+    }
     // Create a new Stripe customer if necessary
     if (!customerId) {
       const customer = await stripe.customers.create({
@@ -77,11 +85,39 @@ const createPayment = async (req, res, next) => {
       receipt_email: user.email,
     });
 
+    if (paymentIntent.status !== 'succeeded') {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: 'Payment failed. Please try again.',
+      });
+    }
+
+    const expiry = dryermaster.subscriptionExpiry;
+    const currentYear = new Date().getFullYear();
+    // Convert `expiry` to a Date object to work with
+    let currentSubscriptionExpiry = new Date(expiry);
+    // Set the year to the current year
+    currentSubscriptionExpiry.setFullYear(currentYear);
+    // If the calculated expiry is in the past (meaning the current date is past the expiry date in the current year),
+    // add one more year to ensure the subscription is extended properly from today's date
+    if (currentSubscriptionExpiry < new Date()) {
+      currentSubscriptionExpiry.setFullYear(currentYear + 1);
+    }
+
+    const updatedUser = await Dryermaster.findByIdAndUpdate(
+      user.dryermasterId,
+      { subscriptionExpiry: currentSubscriptionExpiry },
+      { new: true }
+    );
+
     // Respond with success
     res.status(StatusCodes.CREATED).json({
       success: true,
       message: 'Payment successful. Your Subscription has been activated.',
-      result: paymentIntent,
+      result: {
+        subscriptionExpiry: updatedUser.subscriptionExpiry,
+        paymentIntent_status: paymentIntent.status,
+      },
     });
   } catch (err) {
     console.error(err);
