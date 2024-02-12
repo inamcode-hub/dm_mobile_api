@@ -22,6 +22,9 @@ const createPayment = async (req, res, next) => {
         invoice_settings: {
           default_payment_method: paymentMethodId,
         },
+        metadata: {
+          dryerMasterUserId: _id,
+        },
       });
 
       // Update the user in the database with the new Stripe customer ID
