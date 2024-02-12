@@ -15,6 +15,7 @@ const retrieveCustomerPaymentMethods = async (customerId) => {
 const createPayment = async (req, res, next) => {
   const { paymentMethodId } = req.body;
   const _id = req.user.userId;
+  let amount = 10000; // Amount in cents
 
   try {
     // Retrieve user and check for existing Stripe customer ID
@@ -64,7 +65,7 @@ const createPayment = async (req, res, next) => {
 
     // Create a Payment Intent with the customer ID and payment method
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 10000,
+      amount: amount,
       currency: 'usd',
       customer: customerId,
       payment_method: paymentMethodId,
