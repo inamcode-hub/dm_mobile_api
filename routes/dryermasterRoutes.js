@@ -16,8 +16,13 @@ const {
 const {
   chargeExistingCard,
 } = require('../controllers/dryermaster/account/stripe/chargeExistingCard');
+const {
+  detachExistingCard,
+} = require('../controllers/dryermaster/account/stripe/detachExistingCard');
 // register dryermaster
 router.post('/register', authenticateEmployee, register);
+
+//================== DryerMaster account stripe payment routes ================== // USER ROUTES
 
 // DryerMaster account stripe payment routes - User can create a payment
 router.post('/account/stripe', authenticateUser, createPayment);
@@ -27,4 +32,7 @@ router.get('/account/stripe', authenticateUser, existingPaymentMethods);
 
 // DryerMaster account stripe payment routes - User can charge an existing card
 router.post('/account/stripe/charge', authenticateUser, chargeExistingCard);
+
+// DryerMaster account stripe payment routes - User can detach an existing card
+router.post('/account/stripe/detach', authenticateUser, detachExistingCard);
 module.exports = router;
