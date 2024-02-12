@@ -92,6 +92,8 @@ const createPayment = async (req, res, next) => {
       });
     }
 
+    // Update the user's subscription expiry date
+
     const expiry = dryermaster.subscriptionExpiry;
     const currentYear = new Date().getFullYear();
     // Convert `expiry` to a Date object to work with
