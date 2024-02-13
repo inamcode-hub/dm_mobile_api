@@ -122,7 +122,6 @@ const createPayment = async (req, res, next) => {
       },
     });
   } catch (err) {
-    console.error(err);
     // Handle errors appropriately
     if (err.type === 'StripeCardError') {
       res
