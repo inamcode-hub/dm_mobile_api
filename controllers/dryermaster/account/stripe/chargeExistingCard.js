@@ -10,21 +10,21 @@ const chargeExistingCard = async (req, res, next) => {
   const _id = req.user.userId;
   const { paymentMethodId } = req.body;
   const amount = 10000; // Amount in cents
-
-  const dryermaster = await Dryermaster.findById(user.dryermasterId);
-  // check if dryerMaster is not expired
-  if (dryermaster.subscriptionExpiry > new Date()) {
-    return res.status(StatusCodes.OK).json({
-      success: false,
-      message: 'Your subscription is still active.',
-    });
-  }
   try {
     const user = await User.findById(_id);
     if (!user.stripeCustomerId) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
         message: "User doesn't have a Stripe customer ID.",
+      });
+    }
+
+    const dryermaster = await Dryermaster.findById(user.dryermasterId);
+    // check if dryerMaster is not expired
+    if (dryermaster.subscriptionExpiry > new Date()) {
+      return res.status(StatusCodes.OK).json({
+        success: false,
+        message: 'Your subscription is still active.',
       });
     }
 
