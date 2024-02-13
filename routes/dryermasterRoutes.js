@@ -19,6 +19,9 @@ const {
 const {
   detachExistingCard,
 } = require('../controllers/dryermaster/account/stripe/detachExistingCard');
+const {
+  existingCharges,
+} = require('../controllers/dryermaster/account/stripe/existingCharges');
 // register dryermaster
 router.post('/register', authenticateEmployee, register);
 
@@ -35,4 +38,8 @@ router.post('/account/stripe/charge', authenticateUser, chargeExistingCard);
 
 // DryerMaster account stripe payment routes - User can detach an existing card
 router.post('/account/stripe/detach', authenticateUser, detachExistingCard);
+
+// DryerMaster account stripe payment routes - User can view existing charges
+router.get('/account/stripe/charges', authenticateUser, existingCharges);
+
 module.exports = router;
