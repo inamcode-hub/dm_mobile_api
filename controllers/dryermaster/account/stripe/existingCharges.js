@@ -11,11 +11,18 @@ const existingCharges = async (req, res, next) => {
   const startingAfter = req.query.starting_after; // Optional: for cursor-based pagination
   try {
     const user = await User.findById(_id);
-
     const params = {
       customer: user.stripeCustomerId,
       limit: limit,
     };
+    if (!user.stripeCustomerId) {
+      return res.status(StatusCodes.OK).json({
+        success: false,
+        message: 'User has no stripeCustomerId',
+        data: [],
+        hasMore: false,
+      });
+    }
     // If there's a starting_after id, use it for pagination
     if (startingAfter) {
       params.starting_after = startingAfter;
