@@ -22,6 +22,9 @@ const {
 const {
   existingCharges,
 } = require('../controllers/dryermaster/account/stripe/existingCharges');
+const {
+  requestSensorData,
+} = require('../controllers/dryermaster/dashboard/requestSensorData');
 // register dryermaster
 router.post('/register', authenticateEmployee, register);
 
@@ -41,5 +44,10 @@ router.post('/account/stripe/detach', authenticateUser, detachExistingCard);
 
 // DryerMaster account stripe payment routes - User can view existing charges
 router.get('/account/stripe/charges', authenticateUser, existingCharges);
+
+//================== DryerMaster BEAGLE BONE SERVER API ================== // USER ROUTES
+
+// DryerMaster BEAGLE BONE SERVER API - User can request sensor data
+router.get('/dashboard/requestSensorData', authenticateUser, requestSensorData);
 
 module.exports = router;
