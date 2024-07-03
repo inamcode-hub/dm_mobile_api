@@ -26,6 +26,10 @@ const {
   sseSensorData,
 } = require('../controllers/dryermaster/dashboard/sseSensorData');
 
+const {
+  requestUpdateRegister,
+} = require('../controllers/dryermaster/dashboard/requestUpdateRegister');
+
 // register dryermaster
 router.post('/register', authenticateEmployee, register);
 
@@ -50,6 +54,11 @@ router.get('/account/stripe/charges', authenticateUser, existingCharges);
 
 // DryerMaster BEAGLE BONE SERVER API - User can request sensor data
 router.get('/dashboard/requestSensorData', authenticateUser, requestSensorData);
+router.post(
+  '/dashboard/update_register',
+  authenticateUser,
+  requestUpdateRegister
+);
 
 // DryerMaster BEAGLE BONE SERVER API - User can request sensor data via SSE
 router.get('/dashboard/sseSensorData', authenticateUser, sseSensorData);
