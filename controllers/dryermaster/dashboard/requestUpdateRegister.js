@@ -28,7 +28,6 @@ const requestUpdateRegister = async (req, res, next) => {
       registerAddress,
       newValue
     );
-    console.log(sensorData);
     if (!sensorData.success) {
       return res.status(StatusCodes.SERVICE_UNAVAILABLE).json({
         success: false,
@@ -49,6 +48,86 @@ const requestUpdateRegister = async (req, res, next) => {
   }
 };
 
+const moistureSetpoint = async (req, res, next) => {
+  const _id = req.user.userId;
+  const { newValue } = req.body;
+  const registerAddress = 17;
+
+  try {
+    const user = await User.findById(_id);
+    if (!user.dryermasterId) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: "User doesn't have a Dryer Master registered!",
+      });
+    }
+
+    const dryermaster = await Dryermaster.findById(user.dryermasterId);
+    const serialNumber = dryermaster.dmSerial;
+
+    // Get live data from BeagleBone server
+    const sensorData = await updateRegister(
+      serialNumber,
+      registerAddress,
+      newValue
+    );
+    if (!sensorData.success) {
+      return res.status(StatusCodes.SERVICE_UNAVAILABLE).json({
+        success: false,
+        message: sensorData.status,
+      });
+    }
+    // Respond with success
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: 'Sensor data requested successfully.',
+      result: sensorData,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+const dischargeRateSetpoint = async (req, res, next) => {
+  const _id = req.user.userId;
+  const { newValue } = req.body;
+  const registerAddress = 17;
+
+  try {
+    const user = await User.findById(_id);
+    if (!user.dryermasterId) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: "User doesn't have a Dryer Master registered!",
+      });
+    }
+
+    const dryermaster = await Dryermaster.findById(user.dryermasterId);
+    const serialNumber = dryermaster.dmSerial;
+
+    // Get live data from BeagleBone server
+    const sensorData = await updateRegister(
+      serialNumber,
+      registerAddress,
+      newValue
+    );
+    if (!sensorData.success) {
+      return res.status(StatusCodes.SERVICE_UNAVAILABLE).json({
+        success: false,
+        message: sensorData.status,
+      });
+    }
+    // Respond with success
+    res.status(StatusCodes.OK).json({
+      success: true,
+      message: 'Sensor data requested successfully.',
+      result: sensorData,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 module.exports = {
   requestUpdateRegister,
+  dischargeRateSetpoint,
+  moistureSetpoint,
 };

@@ -28,6 +28,8 @@ const {
 
 const {
   requestUpdateRegister,
+  moistureSetpoint,
+  dischargeRateSetpoint,
 } = require('../controllers/dryermaster/dashboard/requestUpdateRegister');
 
 // register dryermaster
@@ -58,6 +60,17 @@ router.post(
   '/dashboard/update_register',
   authenticateUser,
   requestUpdateRegister
+);
+
+router.post(
+  '/dashboard/moisture_set_point',
+  authenticateUser,
+  moistureSetpoint
+);
+router.post(
+  '/dashboard/discharge_rate_set_point',
+  authenticateUser,
+  dischargeRateSetpoint
 );
 
 // DryerMaster BEAGLE BONE SERVER API - User can request sensor data via SSE
