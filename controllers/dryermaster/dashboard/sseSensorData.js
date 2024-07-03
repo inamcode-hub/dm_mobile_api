@@ -1,4 +1,5 @@
 const { StatusCodes } = require('http-status-codes');
+const jose = require('jose');
 const User = require('../../../models/User');
 const Dryermaster = require('../../../models/Dryermaster');
 const {
@@ -6,6 +7,21 @@ const {
 } = require('../../../lib/beaglonebone_api_server/beagleboneApi');
 
 const sseSensorData = async (req, res, next) => {
+  const token = req.query.token;
+  try {
+    const { payload, protectedHeader } = await jose.jwtVerify(
+      token,
+      new TextEncoder().encode(process.env.JWT_SECRET)
+    );
+    const { userId, name, iss } = payload;
+    req.user = { userId, name, role: iss };
+  } catch (error) {
+    return res.status(StatusCodes.UNAUTHORIZED).json({
+      success: false,
+      message: 'Not authorized to access this route!',
+      result: error?.code,
+    });
+  }
   const _id = req.user.userId;
 
   try {

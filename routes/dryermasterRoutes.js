@@ -76,6 +76,6 @@ router.post(
 router.post('/dashboard/update_mode', authenticateUser, updateMode);
 
 // DryerMaster BEAGLE BONE SERVER API - User can request sensor data via SSE
-router.get('/dashboard/sseSensorData', authenticateUser, sseSensorData);
+router.get('/dashboard/sseSensorData', sseSensorData);
 
 module.exports = router;
