@@ -89,8 +89,11 @@ const moistureSetpoint = async (req, res, next) => {
 };
 const dischargeRateSetpoint = async (req, res, next) => {
   const _id = req.user.userId;
-  const { newValue } = req.body;
-  const registerAddress = 17;
+  let { newValue } = req.body; // Use let instead of const
+  const registerAddress = 100;
+
+  // Ensure newValue is a number and multiply by 10
+  newValue = Number(newValue) * 10;
 
   try {
     const user = await User.findById(_id);
