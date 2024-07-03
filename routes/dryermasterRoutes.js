@@ -30,6 +30,7 @@ const {
   requestUpdateRegister,
   moistureSetpoint,
   dischargeRateSetpoint,
+  updateMode,
 } = require('../controllers/dryermaster/dashboard/requestUpdateRegister');
 
 // register dryermaster
@@ -72,6 +73,7 @@ router.post(
   authenticateUser,
   dischargeRateSetpoint
 );
+router.post('/dashboard/update_mode', authenticateUser, updateMode);
 
 // DryerMaster BEAGLE BONE SERVER API - User can request sensor data via SSE
 router.get('/dashboard/sseSensorData', authenticateUser, sseSensorData);
