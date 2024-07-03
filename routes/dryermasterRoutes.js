@@ -1,10 +1,7 @@
-// routes/dryermasterRoutes.js
-
 const express = require('express');
 const router = express.Router();
 
 const { register } = require('../controllers/dryermaster/register');
-
 const { authenticateEmployee } = require('../middleware/auth/employeeAuth');
 const { authenticateUser } = require('../middleware/auth/userAuth');
 const {
@@ -25,6 +22,10 @@ const {
 const {
   requestSensorData,
 } = require('../controllers/dryermaster/dashboard/requestSensorData');
+const {
+  sseSensorData,
+} = require('../controllers/dryermaster/dashboard/sseSensorData');
+
 // register dryermaster
 router.post('/register', authenticateEmployee, register);
 
@@ -49,5 +50,8 @@ router.get('/account/stripe/charges', authenticateUser, existingCharges);
 
 // DryerMaster BEAGLE BONE SERVER API - User can request sensor data
 router.get('/dashboard/requestSensorData', authenticateUser, requestSensorData);
+
+// DryerMaster BEAGLE BONE SERVER API - User can request sensor data via SSE
+router.get('/dashboard/sseSensorData', authenticateUser, sseSensorData);
 
 module.exports = router;
